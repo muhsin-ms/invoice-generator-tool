@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Invoice Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <div class="brand-title">
+                <i class="fas fa-file-invoice-dollar"></i>
+                <h1>Invoice Generator</h1>
+            </div>
+            <button id="theme-toggle" class="btn btn-secondary">
+                <i class="fas fa-moon"></i> Toggle Theme
+            </button>
+        </header>
+
+        <main class="grid-layout">
+            <!-- Input Form Section -->
+            <section class="card form-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-edit"></i> Create Invoice</h2>
+                </div>
+                <div class="card-body">
+                    <form id="invoice-form">
+                        <!-- Company Details -->
+                        <div class="form-section-group">
+                            <h3>Company Details</h3>
+                            <div class="form-group">
+                                <label for="company-logo">Company Logo</label>
+                                <input type="file" id="company-logo" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-name">Company Name</label>
+                                <input type="text" id="company-name" placeholder="Your Business Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="company-address">Address</label>
+                                <textarea id="company-address" rows="2" placeholder="Street, City, Country"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="company-contact">Contact Info</label>
+                                <input type="text" id="company-contact" placeholder="Email, Phone, Website">
+                            </div>
+                        </div>
+
+                        <!-- Invoice Info -->
+                        <div class="form-section-group">
+                            <h3>Invoice Information</h3>
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="invoice-number-input">Invoice #</label>
+                                    <input type="text" id="invoice-number-input" placeholder="INV-2026-001">
+                                </div>
+                                <div class="form-group">
+                                    <label for="invoice-date-input">Date</label>
+                                    <input type="date" id="invoice-date-input">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="due-date-input">Due Date</label>
+                                <input type="date" id="due-date-input">
+                            </div>
+                        </div>
+
+                        <!-- Client Details -->
+                        <div class="form-section-group">
+                            <h3>Bill To</h3>
+                            <div class="form-group">
+                                <label for="client-name">Client Name</label>
+                                <input type="text" id="client-name" placeholder="Client or Company Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="client-contact">Client Contact Info</label>
+                                <textarea id="client-contact" rows="2" placeholder="Address, Email, Phone"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Items Section -->
+                        <div class="form-section-group">
+                            <div class="section-header">
+                                <h3>Invoice Items</h3>
+                                <button type="button" id="add-item-btn" class="btn btn-small btn-primary">
+                                    <i class="fas fa-plus"></i> Add Item
+                                </button>
+                            </div>
+                            <div id="items-container">
+                                <!-- Dynamic items will be added here -->
+                            </div>
+                        </div>
+
+                        <!-- Tax and Discount -->
+                        <div class="form-section-group">
+                            <div class="form-group-row">
+                                <div class="form-group">
+                                    <label for="tax-input">Tax (%)</label>
+                                    <input type="number" id="tax-input" step="0.1" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="discount-input">Discount ($)</label>
+                                    <input type="number" id="discount-input" step="0.01" min="0" value="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Payment & Notes -->
+                        <div class="form-section-group">
+                            <h3>Payment & Notes</h3>
+                            <div class="form-group">
+                                <label for="payment-method">Payment Method</label>
+                                <select id="payment-method">
+                                    <option value="bank">Bank Transfer</option>
+                                    <option value="upi">UPI / Digital Wallet</option>
+                                    <option value="cash">Cash</option>
+                                    <option value="card">Credit/Debit Card</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="payment-instructions">Payment Instructions</label>
+                                <textarea id="payment-instructions" rows="2" placeholder="Account details, UPI ID, etc."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="notes-input">Additional Notes</label>
+                                <textarea id="notes-input" rows="2" placeholder="Terms and conditions, etc."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-large">
+                                <i class="fas fa-sync-alt"></i> Update Preview
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section class="card preview-section">
+                <div class="card-header">
+                    <h2><i class="fas fa-eye"></i> Live Preview</h2>
+                    <div class="preview-actions">
+                        <button id="print-btn" class="btn btn-outline">
+                            <i class="fas fa-print"></i> Print
+                        </button>
+                        <button id="download-btn" class="btn btn-outline">
+                            <i class="fas fa-file-pdf"></i> PDF
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body preview-scroll">
+                    <div id="invoice-preview" class="invoice-paper">
+                        <!-- Invoice Header -->
+                        <div class="preview-header">
+                            <div class="company-info">
+                                <div class="logo-container" id="logo-preview-container">
+                                    <div class="logo-placeholder">Logo</div>
+                                    <img id="logo-img" src="" alt="Company Logo" style="display: none;">
+                                </div>
+                                <div class="company-details-text">
+                                    <h2 id="preview-company-name">Your Company Name</h2>
+                                    <p id="preview-company-address" class="multi-line">Company Address</p>
+                                    <p id="preview-company-contact">Contact Info</p>
+                                </div>
+                            </div>
+                            <div class="invoice-meta-v2">
+                                <h1>INVOICE</h1>
+                                <div class="meta-grid">
+                                    <span>Invoice #</span>
+                                    <strong id="preview-invoice-number">INV-2026-001</strong>
+                                    <span>Date</span>
+                                    <strong id="preview-invoice-date">--/--/----</strong>
+                                    <span>Due Date</span>
+                                    <strong id="preview-due-date">--/--/----</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="invoice-billing">
+                            <div class="bill-to">
+                                <strong>BILL TO:</strong>
+                                <h3 id="preview-client-name">Client Name</h3>
+                                <p id="preview-client-contact" class="multi-line">Client Contact Details</p>
+                            </div>
+                        </div>
+
+                        <table class="invoice-table-v2">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="text-right">Price</th>
+                                    <th class="text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="invoice-items-list">
+                                <!-- Items will be listed here -->
+                            </tbody>
+                        </table>
+
+                        <div class="invoice-summary">
+                            <div class="payment-info">
+                                <strong>PAYMENT INFO:</strong>
+                                <p id="preview-payment-method">Method: Bank Transfer</p>
+                                <p id="preview-payment-instructions" class="multi-line">Payment instructions go here.</p>
+                            </div>
+                            <div class="total-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span id="preview-subtotal">$0.00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Tax (<span id="preview-tax-percent">0</span>%):</span>
+                                    <span id="preview-tax-amount">$0.00</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Discount:</span>
+                                    <span id="preview-discount-amount">-$0.00</span>
+                                </div>
+                                <div class="summary-row grand-total">
+                                    <strong>Total Amount:</strong>
+                                    <strong id="preview-grand-total">$0.00</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preview-footer">
+                            <div class="notes-section">
+                                <strong>NOTES:</strong>
+                                <p id="preview-notes">Thank you for your business!</p>
+                            </div>
+                            <div class="footer-bottom">
+                                <p>&copy; 2026 <span id="footer-company-name">Your Company Name</span>. All rights reserved.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
