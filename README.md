@@ -12,7 +12,7 @@ A professional web application to generate clean and customizable invoices.
 - Clean business UI
 
 ## 🌐 Live Demo
-https://yourusername.github.io/invoice-generator-tool/
+https://invoice-generator-tool-one.vercel.app/
 
 ##  Tech Stack
 
